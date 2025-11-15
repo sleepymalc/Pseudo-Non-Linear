@@ -6,16 +6,36 @@ def vectorize_tensor(T, B):
 
 	Parameters:
 	- T: numpy array of shape (num_samples, ...)
-	- B: list of indices to select from each sample
+	- B: list of indices to select from each sample (array-like of shape (n_indices, n_dims))
 
 	Returns:
 	- V: vectorized representation of T of shape (num_samples, len(B))
 	"""
 	num_samples = T.shape[0]
-	V = np.zeros((num_samples, len(B)))
-	for i in range(num_samples):
-		for j, idx in enumerate(B):
-			V[i, j] = T[i, *idx]
+
+	# Convert B to numpy array if it's not already
+	B_array = np.asarray(B)
+
+	# Handle edge case: if B is empty
+	if len(B) == 0:
+		return np.zeros((num_samples, 0))
+
+	# Vectorized indexing: construct advanced indexing tuples
+	# For each sample, we want T[i, b[0], b[1], ..., b[n_dims-1]] for all b in B
+	# We can do this by creating indices for all samples at once
+	sample_indices = np.arange(num_samples)[:, np.newaxis]  # Shape: (num_samples, 1)
+
+	# B_array has shape (len(B), n_dims)
+	# We need to create indexing arrays for each dimension
+	if B_array.ndim == 1:
+		# Special case: 1D indices
+		V = T[sample_indices, B_array]
+	else:
+		# General case: multi-dimensional indices
+		# Create indexing tuple: (sample_indices, B[:, 0], B[:, 1], ...)
+		indexing_arrays = [sample_indices] + [B_array[:, dim] for dim in range(B_array.shape[1])]
+		V = T[tuple(indexing_arrays)]
+
 	return V
 
 def reconstruct_tensor(V, T_shape, B):
@@ -24,17 +44,34 @@ def reconstruct_tensor(V, T_shape, B):
 
 	Parameters:
 	- V: vectorized representation of T of shape (num_samples, len(B))
-	- T_shape: original shape of the tensor T
-	- B: list of indices that were used to create the vectorized representation
+	- T_shape: original shape of the tensor T (tuple)
+	- B: list of indices that were used to create the vectorized representation (array-like of shape (n_indices, n_dims))
 
 	Returns:
 	- T: reconstructed tensor with the original shape, missing values filled with zero
 	"""
 	num_samples = V.shape[0]
 	T = np.zeros(T_shape)
-	for i in range(num_samples):
-		for j, idx in enumerate(B):
-			T[i, *idx] = V[i, j]
+
+	# Convert B to numpy array if it's not already
+	B_array = np.asarray(B)
+
+	# Handle edge case: if B is empty
+	if len(B) == 0:
+		return T
+
+	# Vectorized indexing for assignment
+	sample_indices = np.arange(num_samples)[:, np.newaxis]  # Shape: (num_samples, 1)
+
+	if B_array.ndim == 1:
+		# Special case: 1D indices
+		T[sample_indices, B_array] = V
+	else:
+		# General case: multi-dimensional indices
+		# Create indexing tuple: (sample_indices, B[:, 0], B[:, 1], ...)
+		indexing_arrays = [sample_indices] + [B_array[:, dim] for dim in range(B_array.shape[1])]
+		T[tuple(indexing_arrays)] = V
+
 	return T
 
 def renormalize_image(image, threshold=False, threshold_value=10):
