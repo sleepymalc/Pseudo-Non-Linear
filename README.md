@@ -14,7 +14,7 @@ If you find this repository valuable, please give it a star! Got any questions o
 
 ```bibtex
 @inproceedings{hu2024pseudononlinear,
-	title={Pseudo-NonLinear Data Augmentation: A Constrained Energy Minimization Viewpoint},
+	title={Pseudo-Nonlinear Data Augmentation: A Constrained Energy Minimization Viewpoint},
 	author={Pingbang Hu and Mahito Sugiyama},
 	booktitle={The Fourteenth International Conference on Learning Representations},
 	year={2026},
