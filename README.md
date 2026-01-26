@@ -1,4 +1,4 @@
-# Pseudo-Non-Linear Data Augmentation
+# Pseudo-Nonlinear Data Augmentation
 
 This is the official implementation of [Pseudo-Nonlinear Data Augmentation: A Constrained Energy Minimization Viewpoint](https://arxiv.org/abs/2410.00718).
 
