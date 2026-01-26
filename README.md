@@ -13,7 +13,7 @@ In order to use this framework, you need to have a working installation of Pytho
 If you find this repository valuable, please give it a star! Got any questions or feedback? Feel free to open an issue. Using this in your work? Please reference us using the provided citation:
 
 ```bibtex
-@inproceedings{hu2024pseudononlinear,
+@inproceedings{hu2026pseudononlinear,
 	title={Pseudo-Nonlinear Data Augmentation: A Constrained Energy Minimization Viewpoint},
 	author={Pingbang Hu and Mahito Sugiyama},
 	booktitle={The Fourteenth International Conference on Learning Representations},
